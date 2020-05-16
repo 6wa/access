@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Show and hide layers</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 150px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+</style>
+
+<nav id="menu"></nav>
+<div id="map"></div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiYWx0eW5haSIsImEiOiJjamR2dXVtb3MwNDlsMzNxbGszMjAzbmloIn0.npShBXLfxX-YKH9AoiCA7A';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/altynai/cka5jphvd0h6g1ilcj14tod0p',
+        zoom: 10,
+        // center: [-71.97722138410576, -13.517379300798098] // [74.582, 42.868]
+        center:[74.582, 42.868]
+    });
+
+
+    map.on('load', function() {
+        // add source and layer for museums
+        // map.addSource('museums', {
+        //     type: 'vector',
+        //     url: 'mapbox://mapbox.2opop9hr'
+        // });
+        // map.addLayer({
+        //     'id': 'museums',
+        //     'type': 'circle',
+        //     'source': 'museums',
+        //     'layout': {
+        //         // make layer visible by default
+        //         'visibility': 'visible'
+        //     },
+        //     'paint': {
+        //         'circle-radius': 8,
+        //         'circle-color': 'rgba(55,148,179,1)'
+        //     },
+        //     'source-layer': 'museum-cusco'
+        // });
+
+        // add source and layer for contours
+				//парки
+        map.addSource('parks', {
+            type: 'vector',
+            url: 'mapbox://altynai.7ri1z28n'
+        });
+        map.addLayer({
+            'id': 'parks',
+            'type': 'fill',
+            'source': 'parks',
+            'source-layer': 'parks',
+            'layout': {
+                // make layer visible by default
+                'visibility': 'visible'
+            },
+            'paint': {
+							'fill-color': [
+													  "interpolate",
+													  ["linear"],
+													  ["get", "distance"],
+													  0,
+													  "hsl(115, 78%, 60%)",
+													  200,
+													  "hsl(115, 89%, 79%)",
+													  800,
+													  "#f292c5",
+													  1000,
+													  "#fa2e9b"
+													],
+              'fill-outline-color': '#bfbfbf',
+
+            }
+        });
+
+			 //аптеки
+        map.addSource('pharmacy', {
+            type: 'vector',
+            url: 'mapbox://altynai.5bd5sjcu'
+        });
+        map.addLayer({
+            'id': 'pharmacy',
+            'type': 'fill',
+            'source': 'pharmacy',
+            'source-layer': 'pharmacy',
+            'layout': {
+                // make layer visible by default
+                'visibility': 'visible'
+
+            },
+            'paint': {
+                'fill-color': [
+														  "interpolate",
+														  ["linear"],
+														  ["get", "distance"],
+														  0,
+														  "#57e949",
+														  200,
+														  "hsl(115, 89%, 79%)",
+														  800,
+														  "hsl(328, 78%, 76%)",
+														  1000,
+														  "#fa2e9b"
+														]
+
+            }
+        });
+
+				//магазины - продуктовые -- это нужно проверить и убрать не нужные
+				map.addSource('shops', {
+            type: 'vector',
+            url: 'mapbox://altynai.cdwj8sl2'
+        });
+        map.addLayer({
+            'id': 'shops',
+            'type': 'fill',
+            'source': 'shops',
+            'source-layer': 'shops',
+            'layout': {
+                // make layer visible by default
+                'visibility': 'visible'
+
+            },
+            'paint': {
+                'fill-color': [
+															  "interpolate",
+															  ["linear"],
+															  ["get", "distance"],
+															  0,
+															  "#57e949",
+															  200,
+															  "hsl(115, 89%, 79%)",
+															  800,
+															  "hsl(328, 78%, 76%)",
+															  1000,
+															  "hsl(328, 95%, 58%)"
+															]
+
+            }
+        });
+    });
+
+    // enumerate ids of the layers
+    var toggleableLayerIds = ['parks', 'pharmacy', 'shops'];
+
+    // set up the corresponding toggle button for each layer
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+        var id = toggleableLayerIds[i];
+
+        var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = id;
+
+        link.onclick = function(e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            // toggle layer visibility by changing the layout object's visibility property
+            if (visibility === 'visible') {
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                this.className = '';
+            } else {
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+        };
+
+        var layers = document.getElementById('menu');
+        layers.appendChild(link);
+    }
+</script>
+
+
+</body>
+</html>
