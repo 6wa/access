@@ -54,10 +54,57 @@
     #menu a.active:hover {
         background: #3074a4;
     }
+		#legend {
+		  position: absolute;
+		  display: flex;
+		  flex-wrap: wrap;
+		  justify-content: space-between;
+		  margin-left: 240px;
+		  margin-bottom: 20px;
+		  width: 300px;
+		  height: 45px;
+		  opacity: 0.8;
+		  background-color: #000000;
+		  color: #bbb;
+		  z-index: 1;
+		  top: 9px;
+		  right: 10px;
+		}
+		.dbItem{
+		   margin-top: 4px;
+		   margin-left: 10px;
+		   margin-right: 10px;
+		   width: 50px;
+		   height: 12px;
+		   font-family: Arial;
+		   font-size: 14px;
+		   text-align: center;
+		   color: #ffffff;
+		  }
+
+		.legendItem{
+	    position: relative;
+	      display: block;
+	      width: 300px;
+	    	height: 6px;
+	    	background-image: linear-gradient(to right, #57e949, #a2f99a 25%, #f292c5 50%,  #fa2e9b);
+	      margin-left: 10px;
+	      margin-bottom: 10px;
+	    }
+	
 </style>
 
 <nav id="menu"></nav>
 <div id="map"></div>
+	<div id='legend'>
+
+	<div class="dbItem"> < 200м</div>
+	<div class="dbItem">  500м</div>
+	<div class="dbItem">  800м</div>
+	<div class="dbItem"> 1км ></div>
+	<div class="legendItem"></div>
+
+</div>
 
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoiYWx0eW5haSIsImEiOiJjamR2dXVtb3MwNDlsMzNxbGszMjAzbmloIn0.npShBXLfxX-YKH9AoiCA7A';
